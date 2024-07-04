@@ -36,7 +36,9 @@ A simple TODO list exercise to demonstrate understanding of the following librar
 ## How to Use
 1. clone the repository
 1. `npm install`
-1. `npm start` which will open a pre-built Storybook story for demonstration.
+1. `npm start` which will start a `webpack-dev-server` configured to show the exercise
+    * It should automatically open your browser to the correct page
+    * If it does not open automatically, open your browser to `http://localhost:3000`
 
 ## Submission
 

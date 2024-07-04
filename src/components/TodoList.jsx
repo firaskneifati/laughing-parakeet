@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { observer } from 'mobx-react'
+import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import { observable } from 'mobx';
 import { v4 as uuid} from 'uuid';
@@ -13,7 +13,7 @@ function TodoList({ className }) {
     return (
         <div className={className}>
             <header>
-                <h1 className="title">TODO List Example</h1>
+                <h1 className="title">Ratehub TODO Exercise</h1>
             </header>
             <section>
                 <ul>
@@ -32,7 +32,7 @@ function TodoList({ className }) {
                 </button>
             </section>
             <footer>
-                <h2 className="completedTitle">Completed Items</h2>
+                <h2 className="completedTitle">List of Complete Items</h2>
                 <ul>
                     {store.completedItems.map(item => (
                         <li key={item.id}>
