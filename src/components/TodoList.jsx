@@ -1,42 +1,90 @@
 import React, { useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
-import { observable } from 'mobx';
-import { v4 as uuid} from 'uuid';
-
+import TodoButton from './TodoButton'
+import todoStore from '../lib/todoStore'
 import TodoListItem from './TodoListItem'
-
+import TagButton from './TagButton'
 
 function TodoList({ className }) {
-    const [ store ] = useState(createTodoStore);
-
+    const [ store ] = useState(todoStore);
+    const toggleFilter = (tag) => {
+        if( '' === store.filter || tag !== store.filter ) {
+            store.setFilter(tag);
+        } else {
+            store.setFilter('');
+        }
+    }
     return (
         <div className={className}>
             <header>
                 <h1 className="title">Ratehub TODO Exercise</h1>
             </header>
             <section>
-                <ul>
+                <h3>To do items</h3>
+                <ul className="items">
                     {store.activeItems.map(item => (
                         <TodoListItem
                             key={item.id}
+                            id={item.id}
                             name={item.name}
-                            isComplete={item.isComplete}
-                            onComplete={() => store.setCompleted(item.id)}
+                            tags={item.tags}
+                            onTagAdd={(tag) => store.addTag(tag, item.id)}
+                            onTagDelete={(tag) => store.deleteTag(tag, item.id)}
                             onChange={(e) => store.setItemName(item.id, e.target.value)}
+                            onForward={() => store.moveForward(item.id)}
+                            onBackward={(e) => store.moveBackward(item.id)}
+                        />
+                    ))}
+                    {store.filter === '' &&
+                        <li className="add-item">
+                            <TodoButton onClick={store.addItem} btnType="add" />
+                        </li>
+                    }
+                </ul> 
+            </section>
+            <section>
+                <h3>Items in progress</h3>
+                <ul className="items">
+                    {store.progressItems.map(item => (
+                        <TodoListItem
+                            key={item.id}
+                            id={item.id}
+                            name={item.name}
+                            tags={item.tags}
+                            onTagAdd={(tag) => store.addTag(tag, item.id)}
+                            onTagDelete={(tag) => store.deleteTag(tag, item.id)}
+                            onChange={(e) => store.setItemName(item.id, e.target.value)}
+                            onForward={() => store.moveForward(item.id)}
+                            onBackward={(e) => store.moveBackward(item.id)}
                         />
                     ))}
                 </ul>
-                <button onClick={store.addItem}>
-                    Add New Item
-                </button>
+            </section>
+            <section>
+                <h3>Completed items</h3>
+                <ul className="items">
+                    {store.completedItems.map(item => (
+                        <TodoListItem
+                            key={item.id}
+                            id={item.id}
+                            name={item.name}
+                            tags={item.tags}
+                            onTagAdd={(tag) => store.addTag(tag, item.id)}
+                            onTagDelete={(tag) => store.deleteTag(tag, item.id)}
+                            onChange={(e) => store.setItemName(item.id, e.target.value)}
+                            onForward={() => store.moveForward(item.id)}
+                            onBackward={(e) => store.moveBackward(item.id)}
+                        />
+                    ))}
+                </ul>
             </section>
             <footer>
-                <h2 className="completedTitle">List of Complete Items</h2>
-                <ul>
-                    {store.completedItems.map(item => (
-                        <li key={item.id}>
-                            {item.name}
+                <h3>Tags</h3>
+                <ul className="tags">
+                    {store.tags.map(tag => (
+                        <li key={tag}>
+                            <TagButton onClick={() => toggleFilter(tag)} tag={tag} active={tag === store.filter} />
                         </li>
                     ))}
                 </ul>
@@ -45,44 +93,45 @@ function TodoList({ className }) {
     )
 }
 
-function createTodoStore() {
-    const self = observable({
-        items: [{
-            id: uuid(),
-            name: "Sample item",
-            isComplete: false,
-        }],
-
-        get activeItems() {
-            return self.items.filter(i => !i.isComplete);
-        },
-        get completedItems() {
-            return self.items.filter(i => i.isComplete);
-        },
-
-        addItem() {
-            self.items.push({
-                id: uuid(),
-                name: `Item ${self.items.length}`,
-            });
-        },
-        setItemName(id, name) {
-            const item = self.items.find(i => i.id === id);
-            item.name = name;
-        },
-        setCompleted(id) {
-            const item = self.items.find(i => i.id === id);
-            item.isComplete = true;
-        },
-    })
-
-    return self;
-}
-
 export default styled(observer(TodoList))`
-    background-color: lightgray;
+    background-color: #fff;
+    padding: 20px;
+    font-family: sans-serif;
 
+    section{
+        background-color: #eee;
+        padding: 10px;
+        margin-bottom: 20px;
+    }
     .title {
-        color: orange;
+        color: #000;
+    }
+    h3 {
+        font-weight: 400;
+    }
+    ul.items {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+    li.add-item{
+        display: flex;
+        min-width: 300px;
+        button {
+            font-size: 40px;
+        }
+    }
+    ul.tags {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        margin-top: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
     }
 `
