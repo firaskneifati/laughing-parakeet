@@ -14,8 +14,6 @@ export default function createTodoStore() {
             phase: PHASE.INCOMPLETE,
             tags: ['Sampletag'],
         }],
-        progressItems: [],
-        completedItems: [],
         tags: ['Sampletag'],
         filter: '',
         get activeItems() {
