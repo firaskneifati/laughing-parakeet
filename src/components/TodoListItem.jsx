@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import TodoButton from './TodoButton'
 import { motion } from 'framer-motion'
 
-function TodoListItem({ id, className, name, tags, onTagAdd, onTagDelete, onChange, onForward, onBackward }) {
+function TodoListItem({ id, className, name, tags, onTagAdd, onTagDelete, onChange, onForward, onBackward, forwardBtn }) {
 
     const tagInput = useRef();
     const onTagAddHandler = () => {
@@ -32,17 +32,18 @@ function TodoListItem({ id, className, name, tags, onTagAdd, onTagDelete, onChan
     return (
         <motion.li className={className}
             layoutId={id}
+            transition={{ type: "tween" }}
         >
             <div className="col-1">
                 <textarea onChange={onChange} value={name} ref={textareaRef}/>
                 <section className={`tags-section ${ isExpanded ? 'expanded' : ''}`}>
                     <button className="tags-expand-btn" onClick={toggleTagSection}>tags <span>&#9650;</span></button>    
                     <motion.div style={{overflow: 'hidden'}}
-                        initial="hidden"
+                        initial="visible"
                         animate={isExpanded ? 'visible' : 'hidden'}
                         variants={{
                             hidden: {height: 0},
-                            visible: {height: "auto", transition: { duration: 0.5 }},
+                            visible: {height: "auto", transition: { duration: 0.5, type: "tween" }},
                         }}
                     >        
                         <div className="add-tag">
@@ -61,7 +62,7 @@ function TodoListItem({ id, className, name, tags, onTagAdd, onTagDelete, onChan
                 </section>
             </div>
             <div className="col-2">
-                <TodoButton onClick={onForward} btnType="done" />
+                {forwardBtn && <TodoButton onClick={onForward} btnType="done" />}
                 <TodoButton onClick={onBackward} btnType="delete-item" />
             </div>
         </motion.li>

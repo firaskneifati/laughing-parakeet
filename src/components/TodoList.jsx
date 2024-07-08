@@ -34,6 +34,7 @@ function TodoList({ className }) {
                             onChange={(e) => store.setItemName(item.id, e.target.value)}
                             onForward={() => store.moveForward(item.id)}
                             onBackward={(e) => store.moveBackward(item.id)}
+                            forwardBtn
                         />
                     ))}
                     {store.filter === '' &&
@@ -57,6 +58,7 @@ function TodoList({ className }) {
                             onChange={(e) => store.setItemName(item.id, e.target.value)}
                             onForward={() => store.moveForward(item.id)}
                             onBackward={(e) => store.moveBackward(item.id)}
+                            forwardBtn
                         />
                     ))}
                 </ul>
@@ -121,6 +123,7 @@ export default styled(observer(TodoList))`
     li.add-item{
         display: flex;
         min-width: 300px;
+        align-self: center;
         button {
             font-size: 40px;
         }
