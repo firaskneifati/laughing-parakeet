@@ -116,7 +116,14 @@ export default styled(observer(TodoListItem))`
         }
     }
 
-    .tags {
+    ul.tags {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        margin-top: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
         li{
             border: 1px solid grey;
             color: grey;
